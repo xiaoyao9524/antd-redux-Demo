@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Button, List, message } from 'antd';
 import store from './store';
-import { CHANGE_INPUT_VALUE, SUBMIT_INPUT_VALUE, DELETE_ITEM } from './store/actionTypes'
+import { getInputChangeAction, getSubmitInputValueAction, getDeleteItemAction } from './store/actionCreators';
 
 class App extends Component {
   constructor (props) {
@@ -47,11 +47,8 @@ class App extends Component {
   }
 
   handleInputChange = ev => {
-    const action = {
-      type: CHANGE_INPUT_VALUE,
-      value: ev.target.value
-    }
-
+    const action = getInputChangeAction(ev.target.value);
+    
     store.dispatch(action);
   }
 
@@ -59,18 +56,14 @@ class App extends Component {
     if (!this.state.inputValue) {
       return message.error('请输入内容！');
     }
-    const action = {
-      type: SUBMIT_INPUT_VALUE,
-      value: this.state.inputValue
-    }
+    const action = getSubmitInputValueAction(this.state.inputValue);
+
     store.dispatch(action);
   }
 
   deleteItem = (index) => {
-    const action = {
-      type: DELETE_ITEM,
-      index
-    }
+    const action = getDeleteItemAction(index);
+
     store.dispatch(action);
   }
 }

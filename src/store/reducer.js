@@ -10,8 +10,8 @@ const defaultState = {
 }
 
 export default (state = defaultState, action) => {
-  console.log('action: ', action);
   const newState = JSON.parse(JSON.stringify(state));
+  
   switch (action.type) {
     case CHANGE_INPUT_VALUE:
       newState.inputValue = action.value;
