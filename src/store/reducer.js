@@ -1,3 +1,6 @@
+import { CHANGE_INPUT_VALUE, SUBMIT_INPUT_VALUE, DELETE_ITEM } from './actionTypes'
+
+
 const defaultState = {
   inputValue: 'Hello World',
   list: [
@@ -10,18 +13,17 @@ export default (state = defaultState, action) => {
   console.log('action: ', action);
   const newState = JSON.parse(JSON.stringify(state));
   switch (action.type) {
-    case 'change_input_value':
+    case CHANGE_INPUT_VALUE:
       newState.inputValue = action.value;
       break;
-    case 'submit_input_value':
+    case SUBMIT_INPUT_VALUE:
       newState.inputValue = '';
       newState.list.push(action.value);
       break;
-    case 'delete_item':
+    case DELETE_ITEM:
       newState.list.splice(action.index, 1);
       break;
-    default: 
-      console.log('未知acionType: ', action.type);
+    default:
   }
   return newState;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Button, List, message } from 'antd';
 import store from './store';
+import { CHANGE_INPUT_VALUE, SUBMIT_INPUT_VALUE, DELETE_ITEM } from './store/actionTypes'
 
 class App extends Component {
   constructor (props) {
@@ -47,7 +48,7 @@ class App extends Component {
 
   handleInputChange = ev => {
     const action = {
-      type: 'change_input_value',
+      type: CHANGE_INPUT_VALUE,
       value: ev.target.value
     }
 
@@ -59,7 +60,7 @@ class App extends Component {
       return message.error('请输入内容！');
     }
     const action = {
-      type: 'submit_input_value',
+      type: SUBMIT_INPUT_VALUE,
       value: this.state.inputValue
     }
     store.dispatch(action);
@@ -67,7 +68,7 @@ class App extends Component {
 
   deleteItem = (index) => {
     const action = {
-      type: 'delete_item',
+      type: DELETE_ITEM,
       index
     }
     store.dispatch(action);
