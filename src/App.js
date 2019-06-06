@@ -1,26 +1,77 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { Input, Button, List, message } from 'antd';
+import store from './store';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor (props) {
+    super(props);
+    this.state = store.getState();
+    store.subscribe(this.handleStoreChange)
+  }
+
+  handleStoreChange = () => {
+    this.setState(store.getState());
+  }
+
+  render() {
+    return (
+      <div>
+        <div style={{ width: 400, margin: '0 0 10px 10px', paddingTop: 10 }}>
+          <Input 
+            value={this.state.inputValue}
+            style={{ width: 300, marginRight: 10 }} 
+            placeholder="Todo Info" 
+            onChange={this.handleInputChange}
+          />
+          <Button onClick={this.submit} type="primary">提交</Button>
+        </div>
+        <div>
+          <List
+            bordered
+            dataSource={this.state.list}
+            style={{width: 300, marginLeft: 10}}
+            renderItem={(item, index) => (
+              <List.Item 
+                onClick={() => {
+                  this.deleteItem(index);
+                }}
+              >
+               {item}
+              </List.Item>
+            )}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  handleInputChange = ev => {
+    const action = {
+      type: 'change_input_value',
+      value: ev.target.value
+    }
+
+    store.dispatch(action);
+  }
+
+  submit = () => {
+    if (!this.state.inputValue) {
+      return message.error('请输入内容！');
+    }
+    const action = {
+      type: 'submit_input_value',
+      value: this.state.inputValue
+    }
+    store.dispatch(action);
+  }
+
+  deleteItem = (index) => {
+    const action = {
+      type: 'delete_item',
+      index
+    }
+    store.dispatch(action);
+  }
 }
 
 export default App;
