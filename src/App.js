@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Button, List, message } from 'antd';
+import { message } from 'antd';
 import store from './store';
-import { getInputChangeAction, getSubmitInputValueAction, getDeleteItemAction } from './store/actionCreators';
+import { getSetListAction, getInputChangeAction, getSubmitInputValueAction, getDeleteItemAction } from './store/actionCreators';
+import TodoListUI from './TodoListUI';
+import axios from 'axios';
 
 class App extends Component {
   constructor (props) {
@@ -10,40 +12,32 @@ class App extends Component {
     store.subscribe(this.handleStoreChange)
   }
 
-  handleStoreChange = () => {
-    this.setState(store.getState());
-  }
-
   render() {
     return (
-      <div>
-        <div style={{ width: 400, margin: '0 0 10px 10px', paddingTop: 10 }}>
-          <Input 
-            value={this.state.inputValue}
-            style={{ width: 300, marginRight: 10 }} 
-            placeholder="Todo Info" 
-            onChange={this.handleInputChange}
-          />
-          <Button onClick={this.submit} type="primary">提交</Button>
-        </div>
-        <div>
-          <List
-            bordered
-            dataSource={this.state.list}
-            style={{width: 300, marginLeft: 10}}
-            renderItem={(item, index) => (
-              <List.Item 
-                onClick={() => {
-                  this.deleteItem(index);
-                }}
-              >
-               {item}
-              </List.Item>
-            )}
-          />
-        </div>
-      </div>
+      <TodoListUI
+        inputValue={this.state.inputValue}
+        handleInputChange={this.handleInputChange}
+        submit={this.submit}
+        list={this.state.list}
+        deleteItem={this.deleteItem}
+      />
     )
+  }
+
+  componentDidMount = async () => {
+    try {
+      const {data} = await axios.get('/index/recommend.json');
+      // const data = await axios.get('/list.json');
+      const {list} = data;
+      const action = getSetListAction(list.map(item => item.title));
+      store.dispatch(action);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  handleStoreChange = () => {
+    this.setState(store.getState());
   }
 
   handleInputChange = ev => {

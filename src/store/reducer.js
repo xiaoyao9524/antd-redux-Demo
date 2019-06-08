@@ -1,18 +1,23 @@
-import { CHANGE_INPUT_VALUE, SUBMIT_INPUT_VALUE, DELETE_ITEM } from './actionTypes'
+import { 
+  SET_LIST, 
+  CHANGE_INPUT_VALUE, 
+  SUBMIT_INPUT_VALUE,
+  DELETE_ITEM 
+} from './actionTypes';
 
 
 const defaultState = {
   inputValue: 'Hello World',
-  list: [
-    '学习React',
-    '学习Redux'
-  ]
+  list: []
 }
 
 export default (state = defaultState, action) => {
   const newState = JSON.parse(JSON.stringify(state));
   
   switch (action.type) {
+    case SET_LIST:
+      newState.list = action.list;
+      break;
     case CHANGE_INPUT_VALUE:
       newState.inputValue = action.value;
       break;
