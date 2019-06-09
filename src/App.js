@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { message } from 'antd';
 import store from './store';
-import { getSetListAction, getInputChangeAction, getSubmitInputValueAction, getDeleteItemAction } from './store/actionCreators';
+import { getTodoList, getInputChangeAction, getSubmitInputValueAction, getDeleteItemAction } from './store/actionCreators';
 import TodoListUI from './TodoListUI';
-import axios from 'axios';
 
 class App extends Component {
   constructor (props) {
@@ -24,16 +23,10 @@ class App extends Component {
     )
   }
 
-  componentDidMount = async () => {
-    try {
-      const {data} = await axios.get('/index/recommend.json');
-      // const data = await axios.get('/list.json');
-      const {list} = data;
-      const action = getSetListAction(list.map(item => item.title));
-      store.dispatch(action);
-    } catch (err) {
-      console.error(err.message);
-    }
+  componentDidMount = () => {
+    const action = getTodoList();
+    console.log(action);
+    store.dispatch(action);
   }
 
   handleStoreChange = () => {
